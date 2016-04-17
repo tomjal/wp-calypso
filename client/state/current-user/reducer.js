@@ -6,8 +6,8 @@ import { combineReducers } from 'redux';
 /**
  * Internal dependencies
  */
-import { CURRENT_USER_ID_SET, SERIALIZE, DESERIALIZE } from 'state/action-types';
-import { isValidStateWithSchema } from 'state/utils';
+import { CURRENT_USER_ID_SET } from 'state/action-types';
+import { createReducer } from 'state/utils';
 import { idSchema } from './schema';
 
 /**
@@ -17,22 +17,9 @@ import { idSchema } from './schema';
  * @param  {Object} action Action payload
  * @return {Object}        Updated state
  */
-export function id( state = null, action ) {
-	switch ( action.type ) {
-		case CURRENT_USER_ID_SET:
-			state = action.userId;
-			break;
-		case SERIALIZE:
-			return state;
-		case DESERIALIZE:
-			if ( isValidStateWithSchema( state, idSchema ) ) {
-				return state;
-			}
-			return null;
-	}
-
-	return state;
-}
+export const id = createReducer( {
+	[CURRENT_USER_ID_SET]: ( state, action ) => action.userId
+}, null, idSchema );
 
 export default combineReducers( {
 	id

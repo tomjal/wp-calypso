@@ -17,9 +17,9 @@ import { idSchema } from './schema';
  * @param  {Object} action Action payload
  * @return {Object}        Updated state
  */
-export const id = createReducer( {
+export const id = createReducer( null, {
 	[CURRENT_USER_ID_SET]: ( state, action ) => action.userId
-}, null, idSchema );
+}, idSchema );
 
 export default combineReducers( {
 	id

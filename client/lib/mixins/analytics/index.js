@@ -86,6 +86,54 @@ const EVENTS = {
 					section
 				}
 			);
+		},
+
+		searchFormView( section ) {
+			analytics.ga.recordEvent(
+				'Domain Search',
+				'Landed on Search'
+			);
+
+			analytics.tracks.recordEvent( 'calypso_domain_search_pageview', { section } );
+		},
+
+		searchResultsReceive( searchQuery, searchResults, responseTimeInMs, resultCount, section ) {
+			analytics.ga.recordEvent(
+				'Domain Search',
+				'Receive Results',
+				'Response Time',
+				responseTimeInMs
+			);
+
+			analytics.tracks.recordEvent(
+				'calypso_domain_search_results_suggestions_receive',
+				{
+					search_query: searchQuery,
+					results: searchResults.join( ';' ),
+					response_time: responseTimeInMs,
+					result_count: resultCount,
+					section
+				}
+			);
+		},
+
+		domainAvailabilityReceive( searchQuery, availableStatus, responseTimeInMs, section ) {
+			analytics.ga.recordEvent(
+				'Domain Search',
+				'Domain Availability Result',
+				'Domain Available Status',
+				availableStatus
+			);
+
+			analytics.tracks.recordEvent(
+				'calypso_domain_search_results_availability_receive',
+				{
+					search_query: searchQuery,
+					available_status: availableStatus,
+					response_time: responseTimeInMs,
+					section
+				}
+			);
 		}
 	},
 

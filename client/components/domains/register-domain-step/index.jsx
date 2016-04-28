@@ -42,7 +42,9 @@ const analytics = analyticsMixin( 'registerDomain' ),
 	domainsWithPlansOnlyTestEnabled = abtest( 'domainsWithPlansOnly' ) === 'plansOnly';
 
 let searchQueue = [],
-	searchStackTimer = null;
+	searchStackTimer = null,
+	lastSearchTimestamp = null,
+	searchCount = 0;
 
 function processSearchQueue() {
 	const queue = searchQueue.slice();
@@ -61,12 +63,17 @@ function processSearchQueue() {
 		}
 }
 
-function reportSearch( { query, section } ) {
-	analytics.recordEvent( 'searchFormSubmit', query, section );
+function reportSearch( { query, section, timestamp } ) {
+	let timeDiffFromLastSearchInSeconds = 0;
+	if ( lastSearchTimestamp ) {
+		timeDiffFromLastSearchInSeconds = ( timestamp.valueOf() - lastSearchTimestamp.valueOf() ) / 1000;
+	}
+	lastSearchTimestamp = timestamp;
+	analytics.recordEvent( 'searchFormSubmit', query, section, timeDiffFromLastSearchInSeconds, ++searchCount );
 }
 
 function enqueueSearch( search ) {
-	searchQueue.push( search );
+	searchQueue.push( Object.assign( {}, search, { timestamp: Date.now() } ) );
 	if ( searchStackTimer ) {
 		window.clearTimeout( searchStackTimer );
 	}

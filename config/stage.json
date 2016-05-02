@@ -69,7 +69,6 @@
 		"press-this": true,
 		"reader": true,
 		"reader/full-errors": true,
-		"reader/recommendations/posts": true,
 		"rubberband-scroll-disable": false,
 		"server-side-rendering": true,
 		"settings/security/monitor": true,

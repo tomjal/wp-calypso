@@ -31,7 +31,7 @@ module.exports = {
 		stepName: 'user',
 		apiRequestFunction: stepActions.createAccount,
 		providesToken: true,
-		providesDependencies: [ 'bearer_token', 'username' ]
+		providesDependencies: [ 'bearer_token', 'username', 'email' ]
 	},
 
 	test: {
@@ -51,7 +51,7 @@ module.exports = {
 		apiRequestFunction: stepActions.createAccount,
 		providesToken: true,
 		dependencies: [ 'surveySiteType', 'surveyQuestion' ],
-		providesDependencies: [ 'bearer_token', 'username' ]
+		providesDependencies: [ 'bearer_token', 'username', 'email' ]
 	},
 
 	plans: {
@@ -99,6 +99,6 @@ module.exports = {
 			headerText: i18n.translate( 'Create an account for Jetpack' ),
 			subHeaderText: i18n.translate( 'You\'re moments away from connecting Jetpack.' )
 		},
-		providesDependencies: [ 'bearer_token', 'username' ]
+		providesDependencies: [ 'bearer_token', 'username', 'email' ]
 	}
 };

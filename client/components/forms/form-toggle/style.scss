@@ -20,6 +20,10 @@
 	cursor: pointer;
 	transition: all .4s ease, box-shadow 0s;
 
+	&:not( :only-child ) {
+		margin-right: 8px;
+	}
+
 	&:before,
 	&:after {
 		position: relative;

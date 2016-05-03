@@ -4,8 +4,6 @@
 var React = require( 'react' ),
 	classNames = require( 'classnames' );
 
-var idNum = 0;
-
 module.exports = React.createClass( {
 
 	displayName: 'FormToggle',
@@ -36,11 +34,10 @@ module.exports = React.createClass( {
 	},
 
 	render: function() {
-		var id = this.props.id || 'toggle-' + idNum++,
-			toggleClasses = classNames( {
-				'form-toggle': true,
-				'is-toggling': this.props.toggling
-			} );
+		var toggleClasses = classNames( {
+			'form-toggle': true,
+			'is-toggling': this.props.toggling
+		} );
 
 		return (
 			<span>
@@ -51,17 +48,16 @@ module.exports = React.createClass( {
 					readOnly={ true }
 					disabled={ this.props.disabled }
 					/>
-				<label className="form-toggle__label" htmlFor={ id } >
-					<span className="form-toggle__switch"
-						disabled={ this.props.disabled }
-						id={ id }
-						onClick={ this.props.onChange }
-						onKeyDown={ this._onKeyDown }
-						role="checkbox"
-						aria-checked={ this.props.checked }
-						aria-label={ this.props[ 'aria-label' ] }
-						tabIndex={ this.props.disabled ? -1 : 0 }
-						></span>
+				<label
+					className="form-toggle__label"
+					disabled={ this.props.disabled }
+					onClick={ this.props.onChange }
+					onKeyDown={ this._onKeyDown }
+					role="checkbox"
+					aria-checked={ this.props.checked }
+					aria-label={ this.props[ 'aria-label' ] }
+					tabIndex={ this.props.disabled ? -1 : 0 }>
+					<span className="form-toggle__switch" />
 					{ this.props.children }
 				</label>
 			</span>

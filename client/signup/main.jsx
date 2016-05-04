@@ -310,7 +310,7 @@ const Signup = React.createClass( {
 				{ this.localeSuggestions() }
 				{
 					//this.state.loadingScreenStartTime ?
-					true ?
+					localStorage.signupProcessingScreen ?
 					<SignupProcessingScreen steps={ this.state.progress } signupDependencies={ this.state.dependencies } user={ this.state.user } /> :
 					<CurrentComponent
 						path={ this.props.path }
@@ -340,7 +340,8 @@ const Signup = React.createClass( {
 		return (
 			<span>
 				{
-					this.state.loadingScreenStartTime ?
+					// this.state.loadingScreenStartTime ?
+					localStorage.signupProcessingScreen ?
 					null :
 					<FlowProgressIndicator
 						positionInFlow={ this.positionInFlow() }

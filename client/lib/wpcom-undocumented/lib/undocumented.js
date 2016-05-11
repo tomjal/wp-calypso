@@ -1909,6 +1909,17 @@ Undocumented.prototype.unregisterDevice = function( deviceId, fn ) {
 };
 
 /**
+ * Requests streamlined approval to WordAds program
+ *
+ * @param {int}       siteId            The site ID
+ * @returns {XMLHttpRequest}          The XHR instance
+ */
+Undocumented.prototype.wordAdsApprove = function( siteId ) {
+	debug( '/sites/:site:/wordads/approve' );
+	return this.wpcom.req.post( '/sites/' + siteId + '/wordads/approve' );
+};
+
+/**
  * Expose `Undocumented` module
  */
 module.exports = Undocumented;

@@ -18,8 +18,8 @@ import analytics from 'lib/analytics';
 import Search from './search';
 import { decodeEntities } from 'lib/formatting';
 import {
-	getSitePostsForQueryIgnoringPage,
-	getSitePostsHierarchyForQueryIgnoringPage,
+	getSitePostsForQuery,
+	getSitePostsHierarchyForQuery,
 	isRequestingSitePostsForQuery,
 	isSitePostsLastPageForQuery
 } from 'state/posts/selectors';
@@ -235,8 +235,8 @@ const PostSelectorPosts = React.createClass( {
 export default connect( ( state, ownProps ) => {
 	const { siteId, query } = ownProps;
 	return {
-		posts: getSitePostsForQueryIgnoringPage( state, siteId, query ),
-		postsHierarchy: getSitePostsHierarchyForQueryIgnoringPage( state, siteId, query ),
+		posts: getSitePostsForQuery( state, siteId, query ),
+		postsHierarchy: getSitePostsHierarchyForQuery( state, siteId, query ),
 		lastPage: isSitePostsLastPageForQuery( state, siteId, query ),
 		loading: isRequestingSitePostsForQuery( state, siteId, query ),
 		postTypes: getPostTypes( state, siteId )

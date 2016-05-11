@@ -2,7 +2,6 @@
  * External dependencies
  */
 import get from 'lodash/get';
-import range from 'lodash/range';
 import createSelector from 'lib/create-selector';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -118,27 +117,6 @@ export function isSitePostsLastPageForQuery( state, siteId, query = {} ) {
 }
 
 /**
- * Returns an array of posts for the posts query, including all known
- * queried pages, or null if the number of pages is unknown.
- *
- * @param  {Object}  state  Global state tree
- * @param  {Number}  siteId Site ID
- * @param  {Object}  query  Post query object
- * @return {?Array}         Posts for the post query
- */
-export function getSitePostsForQueryIgnoringPage( state, siteId, query ) {
-	const lastPage = getSitePostsLastPageForQuery( state, siteId, query );
-	if ( null === lastPage ) {
-		return lastPage;
-	}
-
-	return range( 1, lastPage + 1 ).reduce( ( memo, page ) => {
-		const pageQuery = Object.assign( {}, query, { page } );
-		return memo.concat( getSitePostsForQuery( state, siteId, pageQuery ) || [] );
-	}, [] );
-}
-
-/**
  * Returns an array of posts for the posts query, including all known queried
  * pages, preserving hierarchy. Returns null if no posts have been received.
  * Hierarchy is represented by `parent` and `items` properties on each post.
@@ -148,9 +126,9 @@ export function getSitePostsForQueryIgnoringPage( state, siteId, query ) {
  * @param  {Object} query  Post query object
  * @return {?Array}        Hierarchical posts for the post query
  */
-export const getSitePostsHierarchyForQueryIgnoringPage = createSelector(
+export const getSitePostsHierarchyForQuery = createSelector(
 	( state, siteId, query ) => {
-		let sitePosts = getSitePostsForQueryIgnoringPage( state, siteId, query );
+		let sitePosts = getSitePostsForQuery( state, siteId, query );
 		if ( ! sitePosts ) {
 			return sitePosts;
 		}

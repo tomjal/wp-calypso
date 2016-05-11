@@ -11,7 +11,7 @@ import QueryPosts from 'components/data/query-posts';
 import { getSelectedSiteId } from 'state/ui/selectors';
 import {
 	isRequestingSitePostsForQuery,
-	getSitePostsForQueryIgnoringPage
+	getSitePostsForQuery
 } from 'state/posts/selectors';
 import PostTypeListPost from './post';
 import PostTypeListPostPlaceholder from './post-placeholder';
@@ -54,7 +54,7 @@ export default connect( ( state, ownProps ) => {
 
 	return {
 		siteId,
-		posts: getSitePostsForQueryIgnoringPage( state, siteId, ownProps.query ),
+		posts: getSitePostsForQuery( state, siteId, ownProps.query ),
 		requesting: isRequestingSitePostsForQuery( state, siteId, ownProps.query )
 	};
 } )( PostTypeList );

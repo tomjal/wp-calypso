@@ -2,23 +2,24 @@
  * External dependencies
  */
 import omitBy from 'lodash/omitBy';
+import includes from 'lodash/includes';
 
 /**
  * Internal dependencies
  */
 import QueryKey from '../key';
-import { DEFAULT_POST_QUERY } from './constants';
+import { DEFAULT_POST_QUERY, IGNORED_QUERY_ARGS } from './constants';
 
 /**
  * Returns true if the specified key value query pair is identical to that of
- * the default post query.
+ * the default post query or if the query key is intentionally ignored.
  *
  * @param  {*}       value Value to check
  * @param  {String}  key   Key to check
- * @return {Boolean}       Whether key value matches default query
+ * @return {Boolean}       Whether key value matches default or is ignored
  */
-function isDefaultQueryValue( value, key ) {
-	return DEFAULT_POST_QUERY[ key ] === value;
+function isOmittedQueryValue( value, key ) {
+	return DEFAULT_POST_QUERY[ key ] === value || includes( IGNORED_QUERY_ARGS, key );
 }
 
 /**
@@ -33,7 +34,7 @@ export default class PostQueryKey extends QueryKey {
 	 * @return {String}       Serialized query
 	 */
 	static stringify( query ) {
-		return super.stringify( omitBy( query, isDefaultQueryValue ) );
+		return super.stringify( omitBy( query, isOmittedQueryValue ) );
 	}
 
 	/**
@@ -43,6 +44,6 @@ export default class PostQueryKey extends QueryKey {
 	 * @return {Object}     Query object
 	 */
 	static parse( key ) {
-		return omitBy( super.parse( key ), isDefaultQueryValue );
+		return omitBy( super.parse( key ), isOmittedQueryValue );
 	}
 }

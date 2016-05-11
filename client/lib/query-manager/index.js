@@ -6,6 +6,7 @@ import reduce from 'lodash/reduce';
 import values from 'lodash/values';
 import omit from 'lodash/omit';
 import map from 'lodash/map';
+import difference from 'lodash/difference';
 
 /**
  * Internal dependencies
@@ -103,12 +104,8 @@ export default class QueryManager {
 	 * @return {Number}       0 if equal, less than 0 if itemA is first,
 	 *                        greater than 0 if itemB is first.
 	 */
-	sort( query, itemA, itemB ) {
-		if ( itemA === itemB ) {
-			return 0;
-		}
-
-		return itemB - itemA;
+	sort( query, itemA, itemB ) { // eslint-disable-line no-unused-vars
+		return 0;
 	}
 
 	/**
@@ -179,6 +176,7 @@ export default class QueryManager {
 
 		let isModified = nextItems !== this.data.items,
 			nextQueries = this.data.queries,
+			isNewlyReceivedQueryKey = false,
 			receivedQueryKey;
 
 		// Skip if no items have been updated, added, or removed. If query
@@ -190,14 +188,23 @@ export default class QueryManager {
 		if ( options.query ) {
 			const receivedItemKeys = map( items, this.options.itemKey );
 			receivedQueryKey = this.constructor.QueryKey.stringify( options.query );
+			isNewlyReceivedQueryKey = ! this.data.queries[ receivedQueryKey ];
 
-			// Consider modified either if the current query set is not tracked
-			// or if the keys differ from currently known set
-			isModified = ! isEqual( this.data.queries[ receivedQueryKey ], receivedItemKeys );
+			let nextItemsForReceivedQuery;
+			if ( isNewlyReceivedQueryKey ) {
+				// This query is not yet tracked, so we can simply assign
+				// results and skip match testing later
+				nextItemsForReceivedQuery = receivedItemKeys;
+			} else if ( ! isEqual( this.data.queries[ receivedQueryKey ], receivedItemKeys ) ) {
+				// When query is updated, omit incoming keys from existing set.
+				// These keys will be restored below during match testing.
+				nextItemsForReceivedQuery = difference( this.data.queries[ receivedQueryKey ], receivedItemKeys );
+			}
 
-			if ( isModified ) {
+			if ( nextItemsForReceivedQuery ) {
+				isModified = true;
 				nextQueries = Object.assign( {}, nextQueries, {
-					[ receivedQueryKey ]: receivedItemKeys
+					[ receivedQueryKey ]: nextItemsForReceivedQuery
 				} );
 			}
 		}
@@ -205,7 +212,7 @@ export default class QueryManager {
 		nextQueries = reduce( nextQueries, ( memo, originalItems, queryKey ) => {
 			memo[ queryKey ] = originalItems;
 
-			if ( receivedQueryKey && receivedQueryKey === queryKey ) {
+			if ( receivedQueryKey && isNewlyReceivedQueryKey && receivedQueryKey === queryKey ) {
 				// We can save the effort testing against received items in
 				// the current query, since we know they'll match
 				return memo;

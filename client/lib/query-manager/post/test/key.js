@@ -21,6 +21,12 @@ describe( 'PostQueryKey', () => {
 
 			expect( key ).to.equal( '{"ok":true}' );
 		} );
+
+		it( 'should omit ignored post query parameters', () => {
+			const key = PostQueryKey.stringify( { ok: true, page: 4 } );
+
+			expect( key ).to.equal( '{"ok":true}' );
+		} );
 	} );
 
 	describe( '.parse()', () => {
@@ -32,6 +38,12 @@ describe( 'PostQueryKey', () => {
 
 		it( 'should omit default post query parameters', () => {
 			const query = PostQueryKey.parse( '{"ok":true,"type":"post"}' );
+
+			expect( query ).to.eql( { ok: true } );
+		} );
+
+		it( 'should omit ignored post query parameters', () => {
+			const query = PostQueryKey.parse( '{"ok":true,"page":4}' );
 
 			expect( query ).to.eql( { ok: true } );
 		} );

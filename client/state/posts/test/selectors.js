@@ -14,8 +14,7 @@ import {
 	isRequestingSitePostsForQuery,
 	getSitePostsLastPageForQuery,
 	isSitePostsLastPageForQuery,
-	getSitePostsForQueryIgnoringPage,
-	getSitePostsHierarchyForQueryIgnoringPage,
+	getSitePostsHierarchyForQuery,
 	isRequestingSitePost,
 	getEditedPost,
 	getEditedPostValue
@@ -256,21 +255,9 @@ describe( 'selectors', () => {
 
 			expect( isLastPage ).to.be.true;
 		} );
-	} );
-
-	describe( '#getSitePostsForQueryIgnoringPage()', () => {
-		it( 'should return null if the last page is not known', () => {
-			const isLastPage = isSitePostsLastPageForQuery( {
-				posts: {
-					queriesLastPage: {}
-				}
-			}, 2916284, { search: 'Hello' } );
-
-			expect( isLastPage ).to.be.null;
-		} );
 
 		it( 'should return a concatenated array of all site posts ignoring page', () => {
-			const sitePosts = getSitePostsForQueryIgnoringPage( {
+			const sitePosts = getSitePostsForQuery( {
 				posts: {
 					queries: {
 						2916284: new PostQueryManager( {
@@ -279,8 +266,7 @@ describe( 'selectors', () => {
 								413: { ID: 413, site_ID: 2916284, global_ID: '6c831c187ffef321eb43a67761a525a3', title: 'Ribs & Chicken' }
 							},
 							queries: {
-								'{"number":1}': [ 841 ],
-								'{"number":1,"page":2}': [ 413 ]
+								'{}': [ 841, 413 ]
 							}
 						} )
 					},
@@ -297,9 +283,9 @@ describe( 'selectors', () => {
 		} );
 	} );
 
-	describe( '#getSitePostsHierarchyForQueryIgnoringPage()', () => {
+	describe( '#getSitePostsHierarchyForQuery()', () => {
 		beforeEach( () => {
-			getSitePostsHierarchyForQueryIgnoringPage.memoizedSelector.cache.clear();
+			getSitePostsHierarchyForQuery.memoizedSelector.cache.clear();
 		} );
 
 		it( 'should return null if the last page is not known', () => {
@@ -313,7 +299,7 @@ describe( 'selectors', () => {
 		} );
 
 		it( 'should return a concatenated array of all site posts ignoring page, preserving hierarchy', () => {
-			const sitePosts = getSitePostsHierarchyForQueryIgnoringPage( {
+			const sitePosts = getSitePostsHierarchyForQuery( {
 				posts: {
 					queries: {
 						2916284: new PostQueryManager( {
@@ -323,9 +309,7 @@ describe( 'selectors', () => {
 								120: { ID: 120, site_ID: 2916284, global_ID: 'f0cb4eb16f493c19b627438fdc18d57c', title: 'Steak & Eggs', parent: { ID: 413 } }
 							},
 							queries: {
-								'{"number":1}': [ 841 ],
-								'{"number":1,"page":2}': [ 413 ],
-								'{"number":1,"page":3}': [ 120 ]
+								'{}': [ 841, 413, 120 ]
 							}
 						} )
 					},

@@ -1,10 +1,5 @@
 export const DEFAULT_POST_QUERY = {
 	context: 'display',
-	http_envelope: false,
-	pretty: false,
-	number: 20,
-	offset: 0,
-	page: 1,
 	order: 'DESC',
 	order_by: 'date',
 	type: 'post',
@@ -12,3 +7,11 @@ export const DEFAULT_POST_QUERY = {
 	sticky: 'include',
 	search: ''
 };
+
+export const IGNORED_QUERY_ARGS = [
+	'http_envelope',
+	'pretty',
+	'number',
+	'offset',
+	'page'
+];

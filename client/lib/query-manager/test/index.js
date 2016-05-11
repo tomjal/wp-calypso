@@ -100,16 +100,8 @@ describe( 'QueryManager', () => {
 	} );
 
 	describe( '#sort()', () => {
-		it( 'should return 0 for equal items', () => {
+		it( 'should return 0', () => {
 			expect( manager.sort( {}, 40, 40 ) ).to.equal( 0 );
-		} );
-
-		it( 'should return a number less than zero if the first argument is larger', () => {
-			expect( manager.sort( {}, 50, 40 ) ).to.be.lt( 0 );
-		} );
-
-		it( 'should return a number greater than zero if the first argument is smaller', () => {
-			expect( manager.sort( {}, 30, 40 ) ).to.be.gt( 0 );
 		} );
 	} );
 
@@ -237,13 +229,6 @@ describe( 'QueryManager', () => {
 			manager = manager.receive( { ID: 144 }, { query: {} } );
 
 			expect( manager.getData( {} ) ).to.eql( [ { ID: 144 } ] );
-		} );
-
-		it( 'should replace the query set when a query updates', () => {
-			manager = manager.receive( { ID: 144 }, { query: {} } );
-			manager = manager.receive( { ID: 152 }, { query: {} } );
-
-			expect( manager.getData( {} ) ).to.eql( [ { ID: 152 } ] );
 		} );
 
 		it( 'should remove a tracked query item when it no longer matches', () => {

@@ -2,7 +2,8 @@
  * External Dependencies
  */
 var ReactDom = require( 'react-dom' ),
-	React = require( 'react' );
+	React = require( 'react' ),
+	ReactRedux = require( 'react-redux' );
 
 /**
  * Internal Dependencies
@@ -65,12 +66,14 @@ var controller = {
 		analytics.pageView.record( baseAnalyticsPath, analyticsPageTitle );
 
 		ReactDom.render(
-			React.createElement( MenusComponent, {
-				siteMenus: siteMenus,
-				itemTypes: itemTypes,
-				key: siteMenus.siteID,
-				site: site
-			} ),
+			React.createElement( ReactRedux.Provider, { store: context.store },
+				React.createElement( MenusComponent, {
+					siteMenus: siteMenus,
+					itemTypes: itemTypes,
+					key: siteMenus.siteID,
+					site: site
+				} )
+			),
 			document.getElementById( 'primary' )
 		);
 	}

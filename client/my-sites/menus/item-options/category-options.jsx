@@ -9,7 +9,7 @@ var React = require( 'react' ),
  * Internal dependencies
  */
 var MenuPanelBackButton = require( '../menu-panel-back-button' ),
-	CategorySelector = require( 'my-sites/category-selector' ),
+	CategorySelector = require( 'my-sites/term-selector' ),
 	CategoryList = require( 'components/data/category-list-data' );
 
 // The `selected` prop item passed in from MenuEditableItem

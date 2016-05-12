@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import page from 'page';
+import { connect } from 'react-redux';
 
 /**
  * Internal dependencies
@@ -23,6 +24,8 @@ import siteList from 'lib/sites-list';
 import analytics from 'lib/analytics';
 import i18n from 'lib/i18n-utils';
 import EmptyContent from 'components/empty-content';
+import { isOlarkTimedOut } from 'state/ui/olark/selectors';
+import QueryOlark from 'components/data/query-olark';
 
 /**
  * Module variables
@@ -30,17 +33,8 @@ import EmptyContent from 'components/empty-content';
 const wpcom = wpcomLib.undocumented();
 const sites = siteList();
 let savedContactForm = null;
-const OLARK_TIMEOUT = 5000;
 
-module.exports = React.createClass( {
-	displayName: 'HelpContact',
-
-	componentWillMount() {
-		const olarkTimeoutRef = setTimeout( () => {
-			this.setState( { olarkTimedOut: ! this.state.olark.isOlarkReady } );
-		}, OLARK_TIMEOUT );
-		this.setState( { olarkTimeoutRef: olarkTimeoutRef } );
-	},
+const HelpContact = React.createClass( {
 
 	componentDidMount: function() {
 		olarkStore.on( 'change', this.updateOlarkState );
@@ -85,9 +79,7 @@ module.exports = React.createClass( {
 			isSubmitting: false,
 			confirmation: null,
 			isChatEnded: false,
-			sitesInitialized: sites.initialized,
-			olarkTimedOut: null,
-			olarkTimeoutRef: null
+			sitesInitialized: sites.initialized
 		};
 	},
 
@@ -363,7 +355,7 @@ module.exports = React.createClass( {
 			return <HelpContactConfirmation { ...confirmation } />;
 		}
 
-		if ( ! ( olark.isOlarkReady && sitesInitialized ) && this.state.olarkTimedOut ) {
+		if ( this.props.olarkTimedOut ) {
 			return ( <EmptyContent
 				title={ this.translate( 'Whoops, we could not load our chat tools.' ) }
 				line={ this.translate( 'Do you use an ad blocker? Please try disabling it and reload this page.' ) }
@@ -438,7 +430,16 @@ module.exports = React.createClass( {
 				<Card className={ this.canShowChatbox() ? 'help-contact__chat-form' : 'help-contact__form' }>
 					{ this.getView() }
 				</Card>
+				<QueryOlark />
 			</Main>
 		);
 	}
 } );
+
+export default connect(
+	( state ) => {
+		return {
+			olarkTimedOut: isOlarkTimedOut( state )
+		};
+	}
+)( HelpContact );

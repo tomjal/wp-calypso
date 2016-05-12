@@ -41,7 +41,7 @@ export function status( state = null, action ) {
  *
  * @param  {Object} state  Current state
  * @param  {Object} action Action payload
- * @return {Object}        Updated state
+ * @return {Boolean}       Updated state
  */
 export function requesting( state = false, action ) {
 	switch ( action.type ) {

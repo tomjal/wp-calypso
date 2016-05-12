@@ -23,7 +23,6 @@ import notices from 'notices';
 import siteList from 'lib/sites-list';
 import analytics from 'lib/analytics';
 import i18n from 'lib/i18n-utils';
-import EmptyContent from 'components/empty-content';
 import { isOlarkTimedOut } from 'state/ui/olark/selectors';
 import QueryOlark from 'components/data/query-olark';
 
@@ -35,6 +34,12 @@ const sites = siteList();
 let savedContactForm = null;
 
 const HelpContact = React.createClass( {
+
+	componentWillReceiveProps( nextProps ) {
+		if ( nextProps.olarkTimedOut && this.olarkTimedOut !== nextProps.olarkTimedOut ) {
+			this.onOperatorsAway( true ); // show the kayako contact form when olark fails to load
+		}
+	},
 
 	componentDidMount: function() {
 		olarkStore.on( 'change', this.updateOlarkState );
@@ -277,7 +282,7 @@ const HelpContact = React.createClass( {
 		} );
 	},
 
-	onOperatorsAway: function() {
+	onOperatorsAway: function( timedOut = false ) {
 		const IS_UNAVAILABLE = false;
 		const { details } = this.state.olark;
 
@@ -290,6 +295,9 @@ const HelpContact = React.createClass( {
 		//Autofill the subject field since we will be showing it now that operators have went away.
 		this.autofillSubject();
 
+		if ( timedOut ) {
+			this.showTimeoutNotice();
+		}
 		this.showAvailabilityNotice( IS_UNAVAILABLE );
 	},
 
@@ -311,6 +319,15 @@ const HelpContact = React.createClass( {
 		} else {
 			notices.warning( this.translate( 'Sorry! We just missed you as our Happiness Engineers stepped away.' ) );
 		}
+	},
+
+	showTimeoutNotice() {
+		const { isUserEligible } = this.state.olark;
+
+		if ( ! isUserEligible ) {
+			return;
+		}
+		notices.warning( this.translate( 'Our chat tools did not load. If you have an adblocker please disable it and refresh this page.' ) );
 	},
 
 	/**
@@ -355,15 +372,7 @@ const HelpContact = React.createClass( {
 			return <HelpContactConfirmation { ...confirmation } />;
 		}
 
-		if ( this.props.olarkTimedOut ) {
-			return ( <EmptyContent
-				title={ this.translate( 'Whoops, we could not load our chat tools.' ) }
-				line={ this.translate( 'Do you use an ad blocker? Please try disabling it and reload this page.' ) }
-				illustration={ '/calypso/images/drake/drake-whoops.svg' }
-				isCompact /> );
-		}
-
-		if ( ! ( olark.isOlarkReady && sitesInitialized ) ) {
+		if ( ! ( olark.isOlarkReady && sitesInitialized ) && ! this.props.olarkTimedOut ) {
 			return (
 				<div className="help-contact__placeholder">
 					<h4 className="help-contact__header">Loading contact form</h4>

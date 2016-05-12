@@ -22,6 +22,7 @@ import notices from 'notices';
 import siteList from 'lib/sites-list';
 import analytics from 'lib/analytics';
 import i18n from 'lib/i18n-utils';
+import EmptyContent from 'components/empty-content';
 
 /**
  * Module variables
@@ -29,9 +30,17 @@ import i18n from 'lib/i18n-utils';
 const wpcom = wpcomLib.undocumented();
 const sites = siteList();
 let savedContactForm = null;
+const OLARK_TIMEOUT = 5000;
 
 module.exports = React.createClass( {
 	displayName: 'HelpContact',
+
+	componentWillMount() {
+		const olarkTimeoutRef = setTimeout( () => {
+			this.setState( { olarkTimedOut: ! this.state.olark.isOlarkReady } );
+		}, OLARK_TIMEOUT );
+		this.setState( { olarkTimeoutRef: olarkTimeoutRef } );
+	},
 
 	componentDidMount: function() {
 		olarkStore.on( 'change', this.updateOlarkState );
@@ -67,6 +76,7 @@ module.exports = React.createClass( {
 		}
 
 		sites.removeListener( 'change', this.onSitesChanged );
+		clearTimeout( this.state.olarkTimeoutRef );
 	},
 
 	getInitialState: function() {
@@ -75,7 +85,9 @@ module.exports = React.createClass( {
 			isSubmitting: false,
 			confirmation: null,
 			isChatEnded: false,
-			sitesInitialized: sites.initialized
+			sitesInitialized: sites.initialized,
+			olarkTimedOut: null,
+			olarkTimeoutRef: null
 		};
 	},
 
@@ -349,6 +361,14 @@ module.exports = React.createClass( {
 
 		if ( confirmation ) {
 			return <HelpContactConfirmation { ...confirmation } />;
+		}
+
+		if ( ! ( olark.isOlarkReady && sitesInitialized ) && this.state.olarkTimedOut ) {
+			return ( <EmptyContent
+				title={ this.translate( 'Whoops, we could not load our chat tools.' ) }
+				line={ this.translate( 'Do you use an ad blocker? Please try disabling it and reload this page.' ) }
+				illustration={ '/calypso/images/drake/drake-whoops.svg' }
+				isCompact /> );
 		}
 
 		if ( ! ( olark.isOlarkReady && sitesInitialized ) ) {

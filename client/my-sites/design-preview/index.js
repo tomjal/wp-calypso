@@ -15,7 +15,7 @@ import * as PreviewActions from 'state/preview/actions';
 import accept from 'lib/accept';
 import { updatePreviewWithChanges } from 'lib/design-preview';
 import layoutFocus from 'lib/layout-focus';
-import { getSelectedSiteId } from 'state/ui/selectors';
+import { getSelectedSite } from 'state/ui/selectors';
 
 const debug = debugFactory( 'calypso:design-preview' );
 
@@ -142,7 +142,8 @@ const DesignPreview = React.createClass( {
 		return (
 			<WebPreview
 				className={ this.props.className }
-				showExternal={ false }
+				showExternal={ true }
+				previewUrl={ this.props.selectedSite ? this.props.selectedSite.URL : '' }
 				showClose={ this.props.showClose }
 				showPreview={ this.props.showPreview }
 				defaultViewportDevice={ this.props.defaultViewportDevice }
@@ -157,12 +158,14 @@ const DesignPreview = React.createClass( {
 } );
 
 function mapStateToProps( state ) {
-	const selectedSiteId = getSelectedSiteId( state );
+	const selectedSite = getSelectedSite( state );
+	const selectedSiteId = selectedSite ? selectedSite.ID : false;
 	if ( ! state.preview || ! state.preview[ selectedSiteId ] ) {
 		return { selectedSiteId };
 	}
 	const { previewMarkup, customizations, isUnsaved } = state.preview[ selectedSiteId ];
 	return {
+		selectedSite,
 		selectedSiteId,
 		previewMarkup,
 		customizations,

@@ -11,7 +11,6 @@ import debugFactory from 'debug';
 import Card from 'components/card';
 import Gridicon from 'components/gridicon';
 import Notice from 'components/notice';
-import SectionHeader from 'components/section-header';
 import observe from 'lib/mixins/data-observe';
 
 const debug = debugFactory( 'calypso:push-notification-settings' );

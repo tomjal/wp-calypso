@@ -12,6 +12,9 @@ import * as ActionTypes from 'state/action-types';
 const debug = debugFactory( 'calypso:preview-actions' );
 
 export function fetchPreviewMarkup( site, slug, customizations ) {
+	if ( site.jetpack ) {
+		return false;
+	}
 	return function( dispatch ) {
 		const postData = {};
 		if ( customizations ) {
@@ -25,9 +28,9 @@ export function fetchPreviewMarkup( site, slug, customizations ) {
 				}
 			}
 		}
-		debug( 'fetching preview markup', site, slug, customizations, 'postData', postData );
-		wpcom.undocumented().fetchPreviewMarkup( site, slug, postData )
-		.then( markup => dispatch( gotMarkup( site, markup ) ) );
+		debug( 'fetching preview markup', site.ID, slug, customizations, 'postData', postData );
+		wpcom.undocumented().fetchPreviewMarkup( site.ID, slug, postData )
+		.then( markup => dispatch( gotMarkup( site.ID, markup ) ) );
 		// TODO: handle errors
 	};
 }

@@ -59,8 +59,11 @@ module.exports = React.createClass( {
 	},
 
 	onPreviewSite( event ) {
-		event.preventDefault();
-		this.props.layoutFocus.set( 'preview' );
+		const site = this.getSelectedSite();
+		if ( !site.jetpack ) {
+			event.preventDefault();
+			this.props.layoutFocus.set( 'preview' );
+		}
 	},
 
 	itemLinkClass: function( paths, existingClasses ) {

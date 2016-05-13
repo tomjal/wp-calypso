@@ -159,7 +159,7 @@ const DesignPreview = React.createClass( {
 
 function mapStateToProps( state ) {
 	const selectedSite = getSelectedSite( state );
-	const selectedSiteId = selectedSite ? selectedSite.ID : false;
+	const selectedSiteId = selectedSite ? selectedSite.ID : null;
 	if ( ! state.preview || ! state.preview[ selectedSiteId ] ) {
 		return { selectedSiteId };
 	}

@@ -18,6 +18,7 @@ import Button from 'components/button';
 import LoggedOutFormLinks from 'components/logged-out-form/links';
 import LoggedOutFormLinkItem from 'components/logged-out-form/link-item';
 import { errorNotice } from 'state/notices/actions';
+import EmptyContent from 'components/empty-content';
 
 /*
  * Module variables
@@ -41,8 +42,36 @@ const JetpackSSOForm = React.createClass( {
 		this.props.errorNotice( 'Jetpack SSO is currently in development.' );
 	},
 
+	renderNoQueryArgsError() {
+		return (
+			<Main>
+				<EmptyContent
+					illustration="/calypso/images/drake/drake-whoops.svg"
+					title={ this.translate(
+						'Oops, this URL should not be accessed directly'
+					) }
+					line={ this.translate(
+						'Please click the {{em}}Log in with WordPress.com button{{/em}} on your Jetpack site.',
+						{
+							components: {
+								em: <em />
+							}
+						}
+					) }
+					action={ this.translate( 'Read Single Sign-On Documentation' ) }
+					actionURL="https://jetpack.com/support/sso/"
+				/>
+			</Main>
+		);
+	},
+
 	render() {
 		const user = this.props.userModule.get();
+		const { ssoNonce, siteId } = this.props;
+
+		if ( ! ssoNonce || ! siteId ) {
+			return this.renderNoQueryArgsError();
+		}
 
 		return (
 			<Main className="jetpack-connect">

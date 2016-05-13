@@ -59,18 +59,15 @@ module.exports = React.createClass( {
 
 	render: function() {
 		var pushNotifications = this.props.pushNotifications,
-			user = this.props.user;
+			user = this.props.user.get();
+
+		if ( ! user || ! user.email_verified ) {
+			return null;
+		}
 
 		if ( this.state.dismissed || this.state.subscribed ) {
 			return null;
 		}
-
-		if ( user.fetching || ( user.get() && ! user.get().email_verified ) ) {
-			// Don't show the dialog until the user is fetched.
-			// Don't show the dialog if the user hasn't verified their email address
-			return null;
-		}
-
 
 		if ( 'unknown' === pushNotifications.state || 'subscribed' === pushNotifications.state ) {
 			return null;

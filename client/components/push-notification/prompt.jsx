@@ -47,49 +47,34 @@ module.exports = React.createClass( {
 		return <Notice text={ noticeText } className="email-verification-notice" onDismissClick={ this.dismissNotice } />;
 	},
 
-	pushSubscribedNotice: function() {
-		var noticeText = (
-			<div>
-				<p>
-					<strong>Subscription Successful</strong>
-				</p>
-				<p>Instructions on where to go to manage the setting in the future?</p>
-			</div>
-		);
-
-		return <Notice text={ noticeText } className="email-verification-notice" onDismissClick={ this.dismissNotice } />;
-	},
-
 	pushUnsubscribedNotice: function() {
 		var noticeText = (
 			<div>
 				<p>
-					<strong>{ this.translate( 'Don\'t miss out' ) }</strong>
+					<strong>{ this.translate( 'Get notifications on your desktop' ) }</strong>
 				</p>
 				<p>
-					{ this.translate( 'Enable browser notifications to instantly receive notice of comments or likes on your posts.' ) }
+					{ this.translate( 'See your likes, comments, and more instantly—even when you don\'t have WordPress.com open in your browser.' ) }
 				</p>
 				<p>
 					{ this.translate(
-						'{{enableButton}}Turn on browser notifications{{/enableButton}}\xa0\xa0\xa0' +
-						'{{dismissButton}}Not now{{/dismissButton}}', {
+						'{{enableButton}}Enable Browser Notifications{{/enableButton}}', {
 							components: {
-								enableButton: <button className="button" onClick={ this.subscribe } />,
-								dismissButton: <button className="button is-link" onClick={ this.dismissNotice } />
+								enableButton: <button className="button push-notification__prompt-enable" onClick={ this.subscribe } />
 							} }
 					) }
 				</p>
 			</div>
 		);
 
-		return <Notice text={ noticeText } className="email-verification-notice" onDismissClick={ this.dismissNotice } />;
+		return <Notice text={ noticeText } icon="bell" onDismissClick={ this.dismissNotice } />;
 	},
 
 	render: function() {
 		var pushNotifications = this.props.pushNotifications,
 			user = this.props.user;
 
-		if ( this.state.dismissed ) {
+		if ( this.state.dismissed || this.state.subscribed ) {
 			return null;
 		}
 
@@ -99,16 +84,14 @@ module.exports = React.createClass( {
 			return null;
 		}
 
-		if ( this.state.subscribed ) {
-			return this.pushSubscribedNotice();
-		}
 
 		if ( 'unknown' === pushNotifications.state || 'subscribed' === pushNotifications.state ) {
 			return null;
 		}
 
 		if ( 'denied' === pushNotifications.state ) {
-			return this.pushDeniedNotice();
+			//@todo: Trigger overlay here
+			return null;
 		}
 
 		if ( 'unsubscribed' === pushNotifications.state ) {

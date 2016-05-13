@@ -61,11 +61,7 @@ module.exports = React.createClass( {
 		var pushNotifications = this.props.pushNotifications,
 			user = this.props.user.get();
 
-		if ( ! user || ! user.email_verified ) {
-			return null;
-		}
-
-		if ( this.state.dismissed || this.state.subscribed ) {
+		if ( ! user || ! user.email_verified || this.state.dismissed || this.state.subscribed ) {
 			return null;
 		}
 

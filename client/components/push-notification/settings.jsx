@@ -79,14 +79,14 @@ module.exports = React.createClass( {
 			<div>
 				<Card className="push-notification__settings-header" compact={ true }>
 					<div className="push-notification__settings-label"><Gridicon size={ 24 } className="push-notification__settings-icon" icon="bell" />{ this.translate( 'Browser Notifications' ) }</div>
-					<div className={ classNames( "push-notification__settings-state", stateClass ) }>{ stateText }</div>
+					<div className={ classNames( 'push-notification__settings-state', stateClass ) }>{ stateText }</div>
 				</Card>
 				<Card>
 					<div className="push-notification__settings-body">
 						<div className="push-notification__settings-label">
 							<div className="push-notification__settings-description">{ this.translate( 'Get notifications for new comments, likes, and more instantly, even when your browser is closed.' ) }</div>
 						</div>
-						<div className="push-notification__settings-action"><button className={ classNames( "button", buttonClass ) } disabled={ buttonDisabled } onClick={ this.clickHandler }>{ buttonText }</button></div>
+						<div className="push-notification__settings-action"><button className={ classNames( 'button', buttonClass ) } disabled={ buttonDisabled } onClick={ this.clickHandler }>{ buttonText }</button></div>
 					</div>
 					{ deniedText }
 				</Card>

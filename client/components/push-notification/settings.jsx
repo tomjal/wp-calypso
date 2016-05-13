@@ -40,39 +40,37 @@ module.exports = React.createClass( {
 			stateClass,
 			stateText;
 
-		if ( 'unknown' === this.props.pushNotifications.state ) {
-			return null;
-		}
+		switch ( this.props.pushNotifications.state ) {
+			case 'unsubscribed':
+				buttonClass = { 'is-enable': true };
+				buttonDisabled = false;
+				buttonText = this.translate( 'Enable' );
+				stateClass = { 'is-disabled': true };
+				stateText = this.translate( 'Disabled' );
+				break;
+			case 'subscribed':
+				buttonClass = { 'is-disable': true };
+				buttonDisabled = false;
+				buttonText = this.translate( 'Disable' );
+				stateClass = { 'is-enabled': true };
+				stateText = this.translate( 'Enabled' );
+				break;
+			case 'denied':
+				buttonClass = { 'is-enable': true };
+				buttonDisabled = true;
+				buttonText = this.translate( 'Enable' );
+				stateClass = { 'is-disabled': true };
+				stateText = this.translate( 'Disabled' );
 
-		if ( 'unsubscribed' === this.props.pushNotifications.state ) {
-			buttonClass = { 'is-enable': true };
-			buttonDisabled = false;
-			buttonText = this.translate( 'Enable' );
-			stateClass = { 'is-disabled': true };
-			stateText = this.translate( 'Disabled' );
-		}
-
-		if ( 'subscribed' === this.props.pushNotifications.state ) {
-			buttonClass = { 'is-disable': true };
-			buttonDisabled = false;
-			buttonText = this.translate( 'Disable' );
-			stateClass = { 'is-enabled': true };
-			stateText = this.translate( 'Enabled' );
-		}
-
-		if ( 'denied' === this.props.pushNotifications.state ) {
-			buttonClass = { 'is-enable': true };
-			buttonDisabled = true;
-			buttonText = this.translate( 'Enable' );
-			stateClass = { 'is-disabled': true };
-			stateText = this.translate( 'Disabled' );
-
-			deniedText = <Notice className="push-notifications__settings-instruction" showDismiss={ false } text={
-				<div>
-					<div>{ this.translate( 'Your browser is currently set to block notifications from WordPress.com.' ) }</div>
-					<div>{ this.translate( 'View Instructions to Enable' ) }</div>
-				</div>
-			} />;
+				deniedText = <Notice className="push-notifications__settings-instruction" showDismiss={ false } text={
+					<div>
+						<div>{ this.translate( 'Your browser is currently set to block notifications from WordPress.com.' ) }</div>
+						<div>{ this.translate( 'View Instructions to Enable' ) }</div>
+					</div>
+				} />;
+				break;
+			case 'unknown':
+				return null;
 		}
 
 		return (

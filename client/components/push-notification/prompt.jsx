@@ -65,17 +65,13 @@ module.exports = React.createClass( {
 			return null;
 		}
 
-		if ( 'unknown' === pushNotifications.state || 'subscribed' === pushNotifications.state ) {
-			return null;
-		}
-
-		if ( 'denied' === pushNotifications.state ) {
-			//@todo: Trigger overlay here
-			return null;
-		}
-
-		if ( 'unsubscribed' === pushNotifications.state ) {
-			return this.pushUnsubscribedNotice();
+		switch ( pushNotifications.state ) {
+			case 'unknown':
+			case 'subscribed':
+			case 'denied':
+				return null;
+			case 'unsubscribed':
+				return this.pushUnsubscribedNotice();
 		}
 
 		return null;

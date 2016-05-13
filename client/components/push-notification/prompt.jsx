@@ -65,6 +65,10 @@ module.exports = React.createClass( {
 			return null;
 		}
 
+		if ( 'notification-settings' === this.props.section.name ) {
+			return null;
+		}
+
 		switch ( pushNotifications.state ) {
 			case 'unknown':
 			case 'subscribed':

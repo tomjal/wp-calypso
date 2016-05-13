@@ -34,19 +34,6 @@ module.exports = React.createClass( {
 		this.setState( { dismissed: true } );
 	},
 
-	pushDeniedNotice: function() {
-		var noticeText = (
-			<div>
-				<p>
-					<strong>Permission denied</strong>
-				</p>
-				<p>Instructions on how to enabled notifications?</p>
-			</div>
-		);
-
-		return <Notice text={ noticeText } className="email-verification-notice" onDismissClick={ this.dismissNotice } />;
-	},
-
 	pushUnsubscribedNotice: function() {
 		var noticeText = (
 			<div>

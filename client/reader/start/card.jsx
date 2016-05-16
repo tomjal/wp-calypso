@@ -13,15 +13,16 @@ const StartCard = React.createClass( {
 		const showPostPreview = true;
 		return (
 			<Card className="reader-start-card">
+				<div className="reader-start-card__hero"></div>
 				<header>
-					<SiteIcon site={ site } />
-					<h3>The Adventures of Casey</h3>
+					<SiteIcon site={ site } size={ 70 } />
+					<h1>The Adventures of Casey</h1>
 					<p>Casey Schreiner shares his tips on planning your first solo camping trip around the world.</p>
 				</header>
 				{ showPostPreview ? <StartPostPreview /> : null }
 				<footer>
-					<div className="reader-start-card__follower-count">537,000 followers</div>
-					<FollowButton siteUrl="http://futonbleu.wordpress.com" />
+					<div className="reader-start-card__follower-count">537,000 Followers</div>
+					<FollowButton siteUrl="http://jancavan.wordpress.com" />
 				</footer>
 			</Card>
 		);

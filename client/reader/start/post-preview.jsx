@@ -9,13 +9,12 @@ const StartPostPreview = React.createClass( {
 		const user = { avatar_URL: "https://2.gravatar.com/avatar/5512fbf07ae3dd340fb6ed4924861c8e?s=400&d=mm" };
 		return (
 			<article className="reader-start-post-preview">
-				<h4>The Joys of Solo Camping</h4>
+				<h1>The Joys of Solo Camping</h1>
 				<div className="reader-start-post-preview__byline">
 					<Gravatar user={ user } size={ 20 } />
-					<span>by Casey Schreiner</span>
+					<span className="reader-start-post-preview__author">by Casey Schreiner</span>
 				</div>
-				<p>Camping is one of the best way to truly enjoy some time in nature, but sometimes organising a
-				group camping trip is not the easiest thing in the world.</p>
+				<p>Camping is one of the best way to truly enjoy some time in nature, but sometimes organising a group camping trip is not the easiest thing in the world.</p>
 			</article>
 		);
 	}

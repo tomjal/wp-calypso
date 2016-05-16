@@ -297,8 +297,9 @@ const HelpContact = React.createClass( {
 
 		if ( timedOut ) {
 			this.showTimeoutNotice();
+		} else {
+			this.showAvailabilityNotice( IS_UNAVAILABLE );
 		}
-		this.showAvailabilityNotice( IS_UNAVAILABLE );
 	},
 
 	onOperatorsAvailable: function() {

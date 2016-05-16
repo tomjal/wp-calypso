@@ -162,7 +162,10 @@ function mapStateToProps( state ) {
 	const selectedSite = getSelectedSite( state );
 	const selectedSiteId = selectedSite ? selectedSite.ID : null;
 	if ( ! state.preview || ! state.preview[ selectedSiteId ] ) {
-		return { selectedSiteId };
+		return {
+			selectedSite,
+			selectedSiteId,
+		};
 	}
 	const { previewMarkup, customizations, isUnsaved } = state.preview[ selectedSiteId ];
 	return {

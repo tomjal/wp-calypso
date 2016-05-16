@@ -55,11 +55,16 @@ export default function( newState = initialState, action ) {
 	const state = Object.assign( {}, initialState, newState );
 	switch ( action.type ) {
 		case ActionTypes.PREVIEW_MARKUP_RECEIVE:
+		case ActionTypes.PREVIEW_MARKUP_RECEIVE_FAILURE:
 		case ActionTypes.PREVIEW_CUSTOMIZATIONS_CLEAR:
 		case ActionTypes.PREVIEW_CUSTOMIZATIONS_UPDATE:
 		case ActionTypes.PREVIEW_CUSTOMIZATIONS_UNDO:
 		case ActionTypes.PREVIEW_CUSTOMIZATIONS_SAVED:
-			return Object.assign( {}, state, { [ action.siteId ]: siteReducer( state[ action.siteId ], action ) } );
+			const siteState = siteReducer( state[ action.siteId ], action );
+			const hasChanged = siteState !== state[ action.siteId ];
+			return hasChanged
+				? Object.assign( {}, state, { [ action.siteId ]: siteState } )
+				: state;
 		case ActionTypes.SERIALIZE:
 			return state;
 		case ActionTypes.DESERIALIZE:

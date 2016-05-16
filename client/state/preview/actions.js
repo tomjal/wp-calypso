@@ -15,6 +15,7 @@ export function fetchPreviewMarkup( site, slug, customizations ) {
 	if ( site.jetpack ) {
 		return false;
 	}
+	debug( 'before fetchPreviewMarkup', site, site.ID, slug, customizations );
 	return function( dispatch ) {
 		const postData = {};
 		if ( customizations ) {
@@ -28,15 +29,20 @@ export function fetchPreviewMarkup( site, slug, customizations ) {
 				}
 			}
 		}
-		debug( 'fetching preview markup', site.ID, slug, customizations, 'postData', postData );
+		debug( 'fetching preview markup', site, site.ID, slug, customizations, 'postData', postData );
 		wpcom.undocumented().fetchPreviewMarkup( site.ID, slug, postData )
-		.then( markup => dispatch( gotMarkup( site.ID, markup ) ) );
+			.then( markup => dispatch( gotMarkup( site.ID, markup ) ) )
+			.catch( error => dispatch( gotError( site.ID, error ) ) );
 		// TODO: handle errors
 	};
 }
 
 export function gotMarkup( siteId, markup ) {
 	return { type: ActionTypes.PREVIEW_MARKUP_RECEIVE, markup, siteId };
+}
+
+export function gotError( siteId, error ) {
+	return { type: ActionTypes.PREVIEW_MARKUP_RECEIVE_FAILURE, error, siteId };
 }
 
 export function clearCustomizations( siteId ) {

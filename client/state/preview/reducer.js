@@ -21,7 +21,15 @@ function siteReducer( newState = siteInitialState, action ) {
 			if ( action.markup === state.previewMarkup ) {
 				return state;
 			}
-			return Object.assign( {}, state, { previewMarkup: action.markup } );
+			return Object.assign( {}, state, {
+				lastError: null,
+				previewMarkup: action.markup,
+			} );
+		case ActionTypes.PREVIEW_MARKUP_RECEIVE_FAILURE:
+			return Object.assign( {}, state, {
+				lastError: action.error,
+				previewMarkup: null,
+			} );
 		case ActionTypes.PREVIEW_CUSTOMIZATIONS_CLEAR:
 			return Object.assign( {}, state, { isUnsaved: false, customizations: {}, previousCustomizations: [] } );
 		case ActionTypes.PREVIEW_CUSTOMIZATIONS_UPDATE:

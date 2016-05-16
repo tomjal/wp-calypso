@@ -96,6 +96,7 @@ const DesignPreview = React.createClass( {
 	loadPreview() {
 		if ( this.props.selectedSite && this.props.actions.fetchPreviewMarkup ) {
 			debug( 'loading preview with customizations', this.props.customizations );
+			debug( 'loadPreview', this.props.selectedSite );
 			this.props.actions.fetchPreviewMarkup( this.props.selectedSite, '', this.props.customizations );
 		}
 	},

@@ -10,10 +10,12 @@ import lists from './lists/reducer';
 import feeds from './feeds/reducer';
 import sites from './sites/reducer';
 import start from './start/reducer';
+import posts from './posts/reducer';
 
 export default combineReducers( {
 	feeds,
 	lists,
 	sites,
-	start
+	start,
+	posts
 } );

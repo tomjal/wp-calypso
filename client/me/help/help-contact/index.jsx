@@ -37,7 +37,7 @@ const HelpContact = React.createClass( {
 
 	componentWillReceiveProps( nextProps ) {
 		if ( nextProps.olarkTimedOut && this.olarkTimedOut !== nextProps.olarkTimedOut ) {
-			this.onOperatorsAway( true ); // show the kayako contact form when olark fails to load
+			this.onOlarkUnavailable();
 		}
 	},
 
@@ -75,7 +75,6 @@ const HelpContact = React.createClass( {
 		}
 
 		sites.removeListener( 'change', this.onSitesChanged );
-		clearTimeout( this.state.olarkTimeoutRef );
 	},
 
 	getInitialState: function() {
@@ -282,24 +281,25 @@ const HelpContact = React.createClass( {
 		} );
 	},
 
-	onOperatorsAway: function( timedOut = false ) {
-		const IS_UNAVAILABLE = false;
+	trackContactFormAndFillSubject() {
 		const { details } = this.state.olark;
-
 		if ( ! details.isConversing ) {
 			analytics.tracks.recordEvent( 'calypso_help_offline_form_display', {
 				form_type: 'kayako'
 			} );
 		}
-
-		//Autofill the subject field since we will be showing it now that operators have went away.
 		this.autofillSubject();
+	},
 
-		if ( timedOut ) {
-			this.showTimeoutNotice();
-		} else {
-			this.showAvailabilityNotice( IS_UNAVAILABLE );
-		}
+	onOlarkUnavailable() {
+		this.trackContactFormAndFillSubject();
+		this.showTimeoutNotice();
+	},
+
+	onOperatorsAway: function() {
+		const IS_UNAVAILABLE = false;
+		this.trackContactFormAndFillSubject();
+		this.showAvailabilityNotice( IS_UNAVAILABLE );
 	},
 
 	onOperatorsAvailable: function() {
@@ -323,9 +323,9 @@ const HelpContact = React.createClass( {
 	},
 
 	showTimeoutNotice() {
-		const { isUserEligible } = this.state.olark;
+		const { isUserEligible, isOlarkReady } = this.state.olark;
 
-		if ( ! isUserEligible ) {
+		if ( ! isUserEligible || isOlarkReady ) {
 			return;
 		}
 		notices.warning( this.translate( 'Our chat tools did not load. If you have an adblocker please disable it and refresh this page.' ) );

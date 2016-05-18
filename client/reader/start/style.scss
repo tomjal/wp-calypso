@@ -10,7 +10,7 @@
 			margin-bottom: 8px;
 
 			@include breakpoint( "<960px" ) {
-				padding: 0 10px;
+				padding: 0 15px;
 			}
 		}
 
@@ -22,7 +22,7 @@
 			margin-bottom: 15px;
 
 			@include breakpoint( "<960px" ) {
-				padding: 0 10px;
+				padding: 0 15px;
 			}
 
 			@include breakpoint( ">480px" ) {
@@ -51,6 +51,15 @@
 	@include breakpoint( ">960px" ) {
 		flex: calc( 50% - 3em );
   		margin: 20px 20px 0 0;
+	}
+
+	&:nth-child( even ),
+	&:last-child {
+		margin-right: 0;
+	}
+
+	&:last-child {
+		margin-bottom: 40px;
 	}
 
   	.reader-start-card__hero {
@@ -196,4 +205,47 @@
 			margin-left: 4px;
 		}
 	}
+}
+
+.reader-start-footer {
+	background: rgba( 102, 142, 170, .9 );
+	padding: 8px;
+    position: fixed;
+   		bottom: 0;
+    width: 100%;
+    z-index: 5000;
+
+    .reader-start-footer__action {
+    	color: $white;
+    	margin-left: 36%;
+    	width: 50%;
+
+    	@include breakpoint( "<960px" ) {
+    		margin-left: 10%;
+    		width: 80%;
+    	}
+
+    	@include breakpoint( "<660px" ) {
+    		text-align: center;
+    		width: 90%;
+    	}
+
+    	@include breakpoint( "<480px" ) {
+    		margin: -10px 0 0 10px;
+    	}
+    }
+
+    span {
+    	display: inline-block;
+    	font-size: 18px;
+    	margin-top: 8px;
+    }
+
+    button {
+    	float: right;
+
+    	@include breakpoint( "<660px" ) {
+    		float: none;
+    	}
+    }
 }

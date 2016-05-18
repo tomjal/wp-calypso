@@ -6,8 +6,7 @@ import moment from 'moment';
 const createSitePlanObject = ( plan ) => {
 	return {
 		canStartTrial: Boolean( plan.can_start_trial ),
-		// currentPlan: Boolean( plan.current_plan ),
-		currentPlan: plan.product_slug === 'personal-bundle',
+		currentPlan: Boolean( plan.current_plan ),
 		discountReason: plan.discount_reason,
 		expiry: plan.expiry,
 		expiryMoment: moment( plan.expiry ).startOf( 'day' ),
@@ -15,8 +14,7 @@ const createSitePlanObject = ( plan ) => {
 		formattedPrice: plan.formatted_price,
 		freeTrial: Boolean( plan.free_trial ),
 		hasDomainCredit: Boolean( plan.has_domain_credit ),
-		// id: Number( plan.id ),
-		id: 6159930,
+		id: Number( plan.id ),
 		productName: plan.product_name,
 		productSlug: plan.product_slug,
 		rawDiscount: plan.raw_discount,

@@ -363,6 +363,7 @@ const PostEditor = React.createClass( {
 							{ this.renderNotice() }
 							<div className="editor__header">
 								<EditorTitle
+									isNew={ this.state.isNew }
 									post={ this.state.post }
 									site={ site }
 									onChange={ this.debouncedAutosave }

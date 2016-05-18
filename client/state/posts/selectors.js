@@ -7,6 +7,7 @@ import createSelector from 'lib/create-selector';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import merge from 'lodash/merge';
+import some from 'lodash/some';
 
 /**
  * Internal dependencies
@@ -16,7 +17,7 @@ import {
 	getSerializedPostsQuery,
 	getSerializedPostsQueryWithoutPage
 } from './utils';
-import { DEFAULT_POST_QUERY } from './constants';
+import { DEFAULT_POST_QUERY, DEFAULT_NEW_POST_VALUES } from './constants';
 
 /**
  * Returns a post object by its global ID.
@@ -200,16 +201,29 @@ export function isRequestingSitePost( state, siteId, postId ) {
  */
 export function getEditedPost( state, siteId, postId ) {
 	const post = getSitePost( state, siteId, postId );
-	if ( ! state.posts.edits[ siteId ] ) {
+	const edits = getPostEdits( state, siteId, postId );
+	if ( ! edits ) {
 		return post;
 	}
 
-	const edits = state.posts.edits[ siteId ][ postId || '' ];
-	if ( ! postId ) {
-		return edits || null;
+	if ( ! post ) {
+		return edits;
 	}
 
 	return merge( {}, post, edits );
+}
+
+/**
+ * Returns an object of edited post attributes for the site ID post ID pairing.
+ *
+ * @param  {Object} state  Global state tree
+ * @param  {Number} siteId Site ID
+ * @param  {Number} postId Post ID
+ * @return {Object}        Post revisions
+ */
+export function getPostEdits( state, siteId, postId ) {
+	const { edits } = state.posts;
+	return get( edits, [ siteId, postId || '' ], null );
 }
 
 /**
@@ -223,4 +237,51 @@ export function getEditedPost( state, siteId, postId ) {
  */
 export function getEditedPostValue( state, siteId, postId, field ) {
 	return get( getEditedPost( state, siteId, postId ), field );
+}
+
+/**
+ * Returns true if there are "dirty" edited fields to be saved for the post
+ * corresponding with the site ID post ID pair, or false otherwise.
+ *
+ * @param  {Object}  state  Global state tree
+ * @param  {Number}  siteId Site ID
+ * @param  {Number}  postId Post ID
+ * @return {Boolean}        Whether dirty fields exist
+ */
+export const isEditedPostDirty = createSelector(
+	( state, siteId, postId ) => {
+		const post = getSitePost( state, siteId, postId );
+		const edits = getPostEdits( state, siteId, postId );
+
+		return some( edits, ( value, key ) => {
+			if ( 'type' === key ) {
+				return false;
+			}
+
+			if ( post ) {
+				return post[ key ] !== value;
+			}
+
+			return (
+				DEFAULT_NEW_POST_VALUES.hasOwnProperty( key ) &&
+				value !== DEFAULT_NEW_POST_VALUES[ key ]
+			);
+		} );
+	},
+	( state ) => [ state.posts.items, state.posts.edits ]
+);
+
+/**
+ * Returns true if the edited post has sufficient content to be saved, which is
+ * determined by the presence of a title or content.
+ *
+ * @param  {Object}  state  Global state tree
+ * @param  {Number}  siteId Site ID
+ * @param  {Number}  postId Post ID
+ * @return {Boolean}        Whether content exists
+ */
+export function isEditedPostContentEmpty( state, siteId, postId ) {
+	return ! some( [ 'title', 'content' ], ( field ) => {
+		return !! getEditedPostValue( state, siteId, postId, field );
+	} );
 }

@@ -14,7 +14,7 @@ const StartPostPreview = React.createClass( {
 					<Gravatar user={ user } size={ 20 } />
 					<span className="reader-start-post-preview__author">by Casey Schreiner</span>
 				</div>
-				<p>Camping is one of the best way to truly enjoy some time in nature, but sometimes organising a group camping trip is not the easiest thing in the world.</p>
+				<p>Camping is one of the best way to truly enjoy some time in nature, but sometimes organizing a group camping trip is not the easiest thing in the world. It requires your...</p>
 			</article>
 		);
 	}

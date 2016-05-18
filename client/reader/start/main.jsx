@@ -14,13 +14,12 @@ const Start = React.createClass( {
 	render() {
 		return (
 			<Main className="reader-start">
-				<header>
-					<h2>{ this.translate( 'Welcome to the Reader' ) }</h2>
+				<header className="reader-start__intro">
+					<h1>{ this.translate( 'Welcome to the Reader' ) }</h1>
 					<Button disabled primary>{ this.translate( "OK, I'm all set!" ) }</Button>
-				</header>
-				<p>{ this.translate( "Discover great stories and read your favourite sites' posts all in one place." ) }&nbsp;
-				{ this.translate( "Every time there are new updates to the sites you follow, you'll be the first to know!" ) }
+					<p>{ this.translate( "Discover great stories and read your favorite sites' posts all in one place. Every time there are new updates to the sites you follow, you'll be the first to know!" ) }
 				</p>
+				</header>
 
 				<div className="reader-start__cards">
 					<StartCard />

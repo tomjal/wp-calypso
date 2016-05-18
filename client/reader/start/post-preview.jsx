@@ -6,7 +6,7 @@ import Gravatar from 'components/gravatar';
 
 const StartPostPreview = React.createClass( {
 	render() {
-		const user = { avatar_URL: "https://2.gravatar.com/avatar/5512fbf07ae3dd340fb6ed4924861c8e?s=400&d=mm" };
+		const user = { avatar_URL: 'https://2.gravatar.com/avatar/5512fbf07ae3dd340fb6ed4924861c8e?s=400&d=mm' };
 		return (
 			<article className="reader-start-post-preview">
 				<h1>The Joys of Solo Camping</h1>

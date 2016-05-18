@@ -119,6 +119,15 @@ module.exports = {
 		allowExistingUsers: true,
 		allowAnyLocale: true
 	},
+	wordadsInstantActivation: {
+		datestamp: '20160518',
+		variations: {
+			disabled: 95,
+			enabled: 5,
+		},
+		defaultVariation: 'disabled',
+		allowExistingUsers: true,
+	},
 	wpcomPluginsInSidebar: {
 		datestamp: '20160428',
 		variations: {

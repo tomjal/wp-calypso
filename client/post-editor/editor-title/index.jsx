@@ -5,12 +5,10 @@ import React, { PropTypes } from 'react';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 /**
  * Internal dependencies
  */
-import PostActions from 'lib/posts/actions';
 import PostUtils from 'lib/posts/utils';
 import SiteUtils from 'lib/site/utils';
 import EditorPermalink from 'post-editor/editor-permalink';
@@ -18,17 +16,23 @@ import TrackInputChanges from 'components/track-input-changes';
 import FormTextInput from 'components/forms/form-text-input';
 import { isMobile } from 'lib/viewport';
 import * as stats from 'lib/posts/stats';
-import { setTitle } from 'state/ui/editor/post/actions';
+import { getSelectedSiteId } from 'state/ui/selectors';
+import { getEditorPostId } from 'state/ui/editor/selectors';
+import { editPost } from 'state/posts/actions';
+import { getEditedPostValue } from 'state/posts/selectors';
 
 const EditorTitle = React.createClass( {
 	displayName: 'EditorTitle',
 
 	propTypes: {
-		setTitle: PropTypes.func,
 		post: PropTypes.object,
 		site: PropTypes.object,
+		siteId: PropTypes.number,
+		postId: PropTypes.number,
 		isNew: PropTypes.bool,
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		editPost: PropTypes.func,
+		title: PropTypes.string
 	},
 
 	getInitialState() {
@@ -40,8 +44,7 @@ const EditorTitle = React.createClass( {
 	getDefaultProps() {
 		return {
 			isNew: true,
-			onChange: () => {},
-			setTitle: () => {},
+			onChange: () => {}
 		};
 	},
 
@@ -63,18 +66,9 @@ const EditorTitle = React.createClass( {
 	},
 
 	onChange( event ) {
-		const { post, onChange } = this.props;
-
-		if ( ! post ) {
-			return;
-		}
-
-		// TODO: REDUX - remove flux actions when whole post-editor is reduxified
-		PostActions.edit( {
-			title: event.target.value
-		} );
-
-		this.props.setTitle( event.target.value );
+		const { siteId, postId, onChange } = this.props;
+		const title = event.target.value;
+		this.props.editPost( { title }, siteId, postId );
 		onChange( event );
 	},
 
@@ -101,7 +95,7 @@ const EditorTitle = React.createClass( {
 	},
 
 	render() {
-		const { post, site, isNew } = this.props;
+		const { post, site, title, isNew } = this.props;
 		const isPermalinkEditable = SiteUtils.isPermalinkEditable( site );
 
 		const classes = classNames( 'editor-title', {
@@ -126,7 +120,7 @@ const EditorTitle = React.createClass( {
 						onBlur={ this.onBlur }
 						onFocus={ this.onFocus }
 						autoFocus={ isNew && ! isMobile() }
-						value={ post ? post.title : '' }
+						value={ title }
 						aria-label={ this.translate( 'Edit title' ) }
 						ref="titleInput" />
 				</TrackInputChanges>
@@ -136,8 +130,17 @@ const EditorTitle = React.createClass( {
 } );
 
 export default connect(
-	null,
-	dispatch => bindActionCreators( { setTitle }, dispatch ),
+	( state ) => {
+		const siteId = getSelectedSiteId( state );
+		const postId = getEditorPostId( state );
+
+		return {
+			siteId,
+			postId,
+			title: getEditedPostValue( state, siteId, postId, 'title' )
+		};
+	},
+	{ editPost },
 	null,
 	{ pure: false }
 )( EditorTitle );

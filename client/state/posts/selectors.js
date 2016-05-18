@@ -282,6 +282,7 @@ export const isEditedPostDirty = createSelector(
  */
 export function isEditedPostContentEmpty( state, siteId, postId ) {
 	return ! some( [ 'title', 'content', 'excerpt' ], ( field ) => {
-		return !! getEditedPostValue( state, siteId, postId, field );
+		const value = getEditedPostValue( state, siteId, postId, field );
+		return value && value.trim().length;
 	} );
 }

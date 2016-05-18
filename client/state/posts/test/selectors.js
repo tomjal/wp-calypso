@@ -767,6 +767,22 @@ describe( 'selectors', () => {
 			expect( isEmpty ).to.be.true;
 		} );
 
+		it( 'should return true if new post with whitespace title', () => {
+			const isEmpty = isEditedPostContentEmpty( {
+				posts: {
+					edits: {
+						2916284: {
+							'': {
+								title: '   '
+							}
+						}
+					}
+				}
+			}, 2916284 );
+
+			expect( isEmpty ).to.be.true;
+		} );
+
 		it( 'should return false if saved post has content', () => {
 			const isEmpty = isEditedPostContentEmpty( {
 				posts: {

@@ -734,6 +734,22 @@ describe( 'selectors', () => {
 			expect( isEmpty ).to.be.false;
 		} );
 
+		it( 'should return false if new post with excerpt', () => {
+			const isEmpty = isEditedPostContentEmpty( {
+				posts: {
+					edits: {
+						2916284: {
+							'': {
+								excerpt: 'Lorem ipsum'
+							}
+						}
+					}
+				}
+			}, 2916284 );
+
+			expect( isEmpty ).to.be.false;
+		} );
+
 		it( 'should return true if new post with empty title and content', () => {
 			const isEmpty = isEditedPostContentEmpty( {
 				posts: {

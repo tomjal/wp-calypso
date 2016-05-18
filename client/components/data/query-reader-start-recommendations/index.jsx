@@ -20,12 +20,6 @@ class QueryReaderStartRecommendations extends Component {
 		this.props.requestRecommendations( this.props.recommendationsInteractedWith );
 	}
 
-	componentWillReceiveProps( nextProps ) {
-		if ( this.props.recommendationsInteractedWith !== nextProps.recommendationsInteractedWith ) {
-			this.props.requestRecommendations( nextProps.recommendationsInteractedWith );
-		}
-	}
-
 	render() {
 		return null;
 	}

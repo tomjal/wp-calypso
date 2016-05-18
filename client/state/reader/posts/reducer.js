@@ -25,7 +25,7 @@ import { isValidStateWithSchema } from 'state/utils';
 export function items( state = {}, action ) {
 	switch ( action.type ) {
 		case READER_POSTS_RECEIVE:
-			return Object.assign( {}, state, keyBy( action.posts, 'ID' ) );
+			return Object.assign( {}, state, keyBy( action.posts, 'global_ID' ) );
 		case SERIALIZE:
 			return state;
 		case DESERIALIZE:

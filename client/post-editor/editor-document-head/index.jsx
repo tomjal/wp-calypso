@@ -9,12 +9,13 @@ import { connect } from 'react-redux';
  */
 import localize from 'lib/mixins/i18n/localize';
 import DocumentHead from 'components/data/document-head';
+import QueryPostTypes from 'components/data/query-post-types';
 import { getSelectedSiteId } from 'state/ui/selectors';
 import { getEditorPostId, isEditorNewPost } from 'state/ui/editor/selectors';
 import { getEditedPostValue } from 'state/posts/selectors';
 import { getPostType } from 'state/post-types/selectors';
 
-function EditorDocumentHead( { translate, type, typeObject, newPost } ) {
+function EditorDocumentHead( { translate, siteId, type, typeObject, newPost } ) {
 	let title;
 	if ( 'post' === type ) {
 		if ( newPost ) {
@@ -40,11 +41,19 @@ function EditorDocumentHead( { translate, type, typeObject, newPost } ) {
 		title = translate( 'Edit', { textOnly: true } );
 	}
 
-	return <DocumentHead title={ title } />;
+	return (
+		<div>
+			{ siteId && 'page' !== type && 'post' !== type && (
+				<QueryPostTypes siteId={ siteId } />
+			) }
+			<DocumentHead title={ title } />
+		</div>
+	);
 }
 
 EditorDocumentHead.propTypes = {
 	translate: PropTypes.func,
+	siteId: PropTypes.number,
 	type: PropTypes.string,
 	typeObject: PropTypes.object,
 	newPost: PropTypes.bool
@@ -56,6 +65,7 @@ export default connect( ( state ) => {
 	const type = getEditedPostValue( state, siteId, postId, 'type' );
 
 	return {
+		siteId,
 		type,
 		typeObject: getPostType( state, siteId, type ),
 		newPost: isEditorNewPost( state )

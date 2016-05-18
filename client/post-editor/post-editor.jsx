@@ -269,7 +269,7 @@ const PostEditor = React.createClass( {
 			nextProps.receivePost( savedPost );
 		}
 
-		if ( PostEditStore.isDirty() || nextProps.dirty ) {
+		if ( nextState.isDirty || nextProps.dirty ) {
 			this.markChanged();
 		} else {
 			this.markSaved();

@@ -263,7 +263,7 @@ export const isEditedPostDirty = createSelector(
 			}
 
 			return (
-				DEFAULT_NEW_POST_VALUES.hasOwnProperty( key ) &&
+				! DEFAULT_NEW_POST_VALUES.hasOwnProperty( key ) ||
 				value !== DEFAULT_NEW_POST_VALUES[ key ]
 			);
 		} );

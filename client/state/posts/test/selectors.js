@@ -642,9 +642,43 @@ describe( 'selectors', () => {
 						}
 					}
 				}
-			}, 2916284, 841 );
+			}, 2916284 );
 
 			expect( isDirty ).to.be.false;
+		} );
+
+		it( 'should return true if no saved post and value does not match default for new post', () => {
+			const isDirty = isEditedPostDirty( {
+				posts: {
+					items: {},
+					edits: {
+						2916284: {
+							'': {
+								status: 'publish'
+							}
+						}
+					}
+				}
+			}, 2916284 );
+
+			expect( isDirty ).to.be.true;
+		} );
+
+		it( 'should return true if no saved post and no default exists for key', () => {
+			const isDirty = isEditedPostDirty( {
+				posts: {
+					items: {},
+					edits: {
+						2916284: {
+							'': {
+								author: 'testonesite2014'
+							}
+						}
+					}
+				}
+			}, 2916284 );
+
+			expect( isDirty ).to.be.true;
 		} );
 
 		it( 'should return false if saved post value equals edited post value', () => {

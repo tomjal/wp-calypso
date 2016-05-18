@@ -1,15 +1,10 @@
 /**
- * External dependencies
- */
-import find from 'lodash/find';
-
-/**
- * Returns a single site.
+ * Returns a single post.
  *
  * @param  {Object}  state  Global state tree
- * @param  {Integer}  postId Post ID
+ * @param  {String}  postGlobalId Post global ID
  * @return {Object} Post
  */
-export function getPost( state, postId ) {
-	return find( state.reader.posts.items, [ 'ID', postId ] );
+export function getPost( state, postGlobalId ) {
+	return state.reader.posts.items[ postGlobalId ];
 }

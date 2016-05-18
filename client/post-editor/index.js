@@ -25,6 +25,5 @@ module.exports = function() {
 		page( '/edit/:type', sitesController.siteSelection, sitesController.sites );
 		page( '/edit/:type/new', ( context ) => page.redirect( `/edit/${ context.params.type }` ) );
 		page( '/edit/:type/:site?/:post?', sitesController.siteSelection, sitesController.fetchJetpackSettings, controller.post );
-		page.exit( '/edit/:type/:site?/:post?', controller.resetNewPostEdits );
 	}
 };

@@ -74,6 +74,13 @@ function isFreeTrial( product ) {
 	return Boolean( product.free_trial );
 }
 
+function isPersonal( product ) {
+	product = formatProduct( product );
+	assertValidProduct( product );
+
+	return product.product_slug === 'personal-bundle';
+}
+
 function isPremium( product ) {
 	var premiumProducts = [ 'value_bundle', 'jetpack_premium' ];
 
@@ -132,6 +139,7 @@ function isPlan( product ) {
 	assertValidProduct( product );
 
 	return (
+		isPersonal( product ) ||
 		isPremium( product ) ||
 		isBusiness( product ) ||
 		isEnterprise( product ) ||
@@ -304,6 +312,7 @@ module.exports = {
 	isEnterprise,
 	isFreeJetpackPlan,
 	isFreePlan,
+	isPersonal,
 	isFreeTrial,
 	isGoogleApps,
 	isJetpackBusiness,

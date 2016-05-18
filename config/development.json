@@ -114,6 +114,7 @@
 		"sidebar-drafts-count": true,
 		"support-user": true,
 		"sync-handler": true,
+		"upgrades/personal-plan": true,
 		"upgrades/checkout": true,
 		"upgrades/credit-cards": true,
 		"upgrades/domain-search": true,

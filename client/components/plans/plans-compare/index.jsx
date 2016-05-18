@@ -11,6 +11,7 @@ import times from 'lodash/times';
 /**
  * Internal dependencies
  */
+import { isEnabled } from 'config';
 import analytics from 'lib/analytics';
 import Card from 'components/card';
 import { fetchSitePlans } from 'state/sites/plans/actions';
@@ -18,7 +19,7 @@ import { filterPlansBySiteAndProps, shouldFetchSitePlans } from 'lib/plans';
 import { getPlansBySite } from 'state/sites/plans/selectors';
 import Gridicon from 'components/gridicon';
 import HeaderCake from 'components/header-cake';
-import { isBusiness, isFreePlan, isPremium } from 'lib/products-values';
+import { isFreePlan, isPersonal, isPremium, isBusiness } from 'lib/products-values';
 import NavItem from 'components/section-nav/item';
 import NavTabs from 'components/section-nav/tabs';
 import observe from 'lib/mixins/data-observe';
@@ -101,6 +102,10 @@ const PlansCompare = React.createClass( {
 	isSelected( plan ) {
 		if ( this.state.selectedPlan === 'free' ) {
 			return isFreePlan( plan );
+		}
+
+		if ( this.state.selectedPlan === 'personal' ) {
+			return isPersonal( plan );
 		}
 
 		if ( this.state.selectedPlan === 'premium' ) {
@@ -342,6 +347,7 @@ const PlansCompare = React.createClass( {
 	sectionNavigationForMobile() {
 		const text = {
 			free: this.translate( 'Free' ),
+			personal: this.translate( 'Personal' ),
 			premium: this.translate( 'Premium' ),
 			business: this.translate( 'Business' )
 		};
@@ -363,6 +369,13 @@ const PlansCompare = React.createClass( {
 				<SectionNav selectedText={ text[ this.state.selectedPlan ] }>
 					<NavTabs>
 						{ freeOption }
+						{ isEnabled( 'upgrades/personal-plan' ) &&
+						<NavItem
+							onClick={ this.setPlan.bind( this, 'personal' ) }
+							selected={ 'personal' === this.state.selectedPlan }>
+							{ this.translate( 'Personal' ) }
+						</NavItem>
+						}
 						<NavItem
 							onClick={ this.setPlan.bind( this, 'premium' ) }
 							selected={ 'premium' === this.state.selectedPlan }>

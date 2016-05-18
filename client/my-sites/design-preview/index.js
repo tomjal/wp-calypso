@@ -150,7 +150,6 @@ const DesignPreview = React.createClass( {
 			<WebPreview
 				className={ this.props.className }
 				showExternal={ true }
-				previewUrl={ this.props.selectedSite ? this.props.selectedSite.URL : '' }
 				showClose={ this.props.showClose }
 				showPreview={ this.props.showPreview }
 				defaultViewportDevice={ this.props.defaultViewportDevice }

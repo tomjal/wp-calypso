@@ -57,8 +57,11 @@ import {
 	resetRawContent
 } from 'state/ui/editor/post/actions';
 import { setEditorLastDraft, resetEditorLastDraft } from 'state/ui/editor/last-draft/actions';
-import { isEditorDraftsVisible } from 'state/ui/editor/selectors';
+import { isEditorDraftsVisible, getEditorPostId } from 'state/ui/editor/selectors';
 import { toggleEditorDraftsVisible } from 'state/ui/editor/actions';
+import { getSelectedSiteId } from 'state/ui/selectors';
+import { receivePost, editPost, resetPostEdits } from 'state/posts/actions';
+import { getPostEdits, isEditedPostDirty, isEditedPostContentEmpty } from 'state/posts/selectors';
 import EditorSidebarHeader from 'post-editor/editor-sidebar/header';
 
 const messages = {
@@ -259,6 +262,19 @@ const PostEditor = React.createClass( {
 		}
 	},
 
+	componentWillUpdate( nextProps, nextState ) {
+		const { savedPost } = nextState;
+		if ( savedPost && savedPost !== this.state.savedPost ) {
+			nextProps.receivePost( savedPost );
+		}
+
+		if ( PostEditStore.isDirty() || nextProps.dirty ) {
+			this.markChanged();
+		} else {
+			this.markSaved();
+		}
+	},
+
 	componentWillUnmount: function() {
 		PostEditStore.removeListener( 'change', this.onEditedPostChange );
 		// TODO: REDUX - remove flux actions when whole post-editor is reduxified
@@ -414,9 +430,9 @@ const PostEditor = React.createClass( {
 								savedPost={ this.state.savedPost }
 								post={ this.state.post }
 								isNew={ this.state.isNew }
-								isDirty={ this.state.isDirty }
+								isDirty={ this.state.isDirty || this.props.dirty }
 								isSaveBlocked={ this.state.isSaveBlocked }
-								hasContent={ this.state.hasContent }
+								hasContent={ this.state.hasContent || ! this.props.postContentEmpty }
 								isSaving={ this.state.isSaving }
 								isPublishing={ this.state.isPublishing }
 								onSave={ this.onSave }
@@ -525,11 +541,6 @@ const PostEditor = React.createClass( {
 				}
 			} );
 		}
-		if ( PostEditStore.isDirty() ) {
-			this.markChanged();
-		} else {
-			this.markSaved();
-		}
 	},
 
 	onEditorContentChange: function() {
@@ -560,9 +571,11 @@ const PostEditor = React.createClass( {
 
 		this.saveRawContent();
 		// TODO: REDUX - remove flux actions when whole post-editor is reduxified
-		actions.edit( { content: this.refs.editor.getContent() } );
+		const { edits } = this.props;
+		edits.content = this.refs.editor.getContent();
+		actions.edit( edits );
 
-		this.props.setContent( this.refs.editor.getContent() );
+		this.props.setContent( edits.content );
 
 		// Make sure that after TinyMCE processing that the post is still dirty
 		if ( ! PostEditStore.isDirty() || ! PostEditStore.hasContent() || ! this.state.post ) {
@@ -638,8 +651,7 @@ const PostEditor = React.createClass( {
 	},
 
 	onSave: function( status, callback ) {
-		var edits = {};
-
+		const { edits } = this.props;
 		if ( status ) {
 			edits.status = status;
 		}
@@ -713,7 +725,7 @@ const PostEditor = React.createClass( {
 	},
 
 	iframePreview: function() {
-		if ( this.state.isDirty ) {
+		if ( this.state.isDirty || this.props.dirty ) {
 			this.autosave();
 			// to avoid a weird UX we clear the iframe when (auto)saving
 			// so we need to delay opening it a bit to avoid flickering
@@ -763,7 +775,8 @@ const PostEditor = React.createClass( {
 	},
 
 	onPublish: function() {
-		var edits = { status: 'publish' };
+		const { edits } = this.props;
+		edits.status = 'publish';
 
 		// determine if this is a private publish
 		if ( utils.isPrivate( this.state.post ) ) {
@@ -842,6 +855,13 @@ const PostEditor = React.createClass( {
 		} else {
 			this.props.resetEditorLastDraft();
 		}
+
+		// Update global state to reflect newly saved post and reset all
+		// previous edits (preserving type).
+		this.props.receivePost( post );
+		this.props.resetPostEdits( post.site_ID );
+		this.props.resetPostEdits( post.site_ID, post.ID );
+		this.props.editPost( { type: this.props.type }, post.site_ID, post.ID );
 
 		// make sure the history entry has the post ID in it, but don't dispatch
 		page.replace(
@@ -922,8 +942,14 @@ const PostEditor = React.createClass( {
 
 export default connect(
 	( state ) => {
+		const siteId = getSelectedSiteId( state );
+		const postId = getEditorPostId( state );
+
 		return {
-			showDrafts: isEditorDraftsVisible( state )
+			showDrafts: isEditorDraftsVisible( state ),
+			edits: getPostEdits( state, siteId, postId ),
+			dirty: isEditedPostDirty( state, siteId, postId ),
+			postContentEmpty: isEditedPostContentEmpty( state, siteId, postId )
 		};
 	},
 	( dispatch ) => {
@@ -940,7 +966,10 @@ export default connect(
 			setPostPublished,
 			resetRawContent,
 			setEditorLastDraft,
-			resetEditorLastDraft
+			resetEditorLastDraft,
+			receivePost,
+			editPost,
+			resetPostEdits
 		}, dispatch );
 	},
 	null,

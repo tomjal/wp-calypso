@@ -1022,7 +1022,7 @@ Undocumented.prototype.readTags = function( fn ) {
 Undocumented.prototype.readTagPosts = function( query, fn ) {
 	var params = omit( query, 'tag' );
 	debug( '/read/tags/' + query.tag + '/posts' );
-	if ( config.isEnabled( 'reader/tags-with-elasticsearch' ) ){
+	if ( config.isEnabled( 'reader/tags-with-elasticsearch' ) ) {
 		params.apiVersion = '1.3';
 	} else {
 		params.apiVersion = '1.2';

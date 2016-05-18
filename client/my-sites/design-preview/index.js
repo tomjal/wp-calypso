@@ -55,6 +55,9 @@ const DesignPreview = React.createClass( {
 	},
 
 	componentDidMount() {
+		if ( this.props.selectedSite && this.props.selectedSite.jetpack ) {
+			return;
+		}
 		this.loadPreview();
 	},
 
@@ -94,6 +97,9 @@ const DesignPreview = React.createClass( {
 	},
 
 	loadPreview() {
+		if ( this.props.selectedSite && this.props.selectedSite.jetpack ) {
+			return;
+		}
 		if ( this.props.selectedSite && this.props.actions.fetchPreviewMarkup ) {
 			debug( 'loading preview with customizations', this.props.customizations );
 			debug( 'loadPreview', this.props.selectedSite );
@@ -162,6 +168,12 @@ function mapStateToProps( state ) {
 	const selectedSite = getSelectedSite( state );
 	const selectedSiteId = selectedSite ? selectedSite.ID : null;
 	if ( ! state.preview || ! state.preview[ selectedSiteId ] ) {
+		return {
+			selectedSite,
+			selectedSiteId,
+		};
+	}
+	if ( selectedSite && selectedSite.jetpack ) {
 		return {
 			selectedSite,
 			selectedSiteId,

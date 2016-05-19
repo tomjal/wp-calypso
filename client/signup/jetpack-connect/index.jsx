@@ -168,6 +168,10 @@ const JetpackConnectMain = React.createClass( {
 		return false;
 	},
 
+	handleOnClickTos() {
+		this.props.recordTracksEvent( 'calypso_jpc_tos_link_click' );
+	},
+
 	renderFooter() {
 		return (
 			<LoggedOutFormLinks>
@@ -186,6 +190,7 @@ const JetpackConnectMain = React.createClass( {
 				}
 
 				<SiteURLInput ref="siteUrlInputRef"
+					onTosClick={ this.handleOnClickTos }
 					onChange={ this.onURLChange }
 					onClick={ this.onURLEnter }
 					onDismissClick={ this.onDismissClick }

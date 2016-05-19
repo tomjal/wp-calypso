@@ -62,7 +62,7 @@ module.exports = React.createClass( {
 			return null;
 		}
 
-		if ( 'notification-settings' === this.props.section.name ) {
+		if ( 'notification-settings' === this.props.section.name || 'editor' === this.props.section.group ) {
 			return null;
 		}
 

@@ -1022,7 +1022,7 @@ Undocumented.prototype.readTags = function( fn ) {
 Undocumented.prototype.readTagPosts = function( query, fn ) {
 	var params = omit( query, 'tag' );
 	debug( '/read/tags/' + query.tag + '/posts' );
-	if ( config.isEnabled( 'reader/tags-with-elasticsearch' ) ){
+	if ( config.isEnabled( 'reader/tags-with-elasticsearch' ) ) {
 		params.apiVersion = '1.3';
 	} else {
 		params.apiVersion = '1.2';
@@ -1170,7 +1170,7 @@ Undocumented.prototype.fetchSiteRecommendations = function( query, fn ) {
 };
 
 Undocumented.prototype.readRecommendationsStart = function( query, fn ) {
-	this.wpcom.req.get( '/read/recommendations/start', query, fn );
+	return this.wpcom.req.get( '/read/recommendations/start', query, fn );
 };
 
 Undocumented.prototype.readNewPostEmailSubscription = function( query, fn ) {

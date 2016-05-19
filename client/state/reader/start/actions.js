@@ -2,8 +2,7 @@
  * External dependencies
  */
 import map from 'lodash/map';
-import clone from 'lodash/clone';
-import unset from 'lodash/unset';
+import omit from 'lodash/omit';
 import property from 'lodash/property';
 
 /**
@@ -16,7 +15,7 @@ import {
 	READER_START_RECOMMENDATIONS_REQUEST_SUCCESS,
 	READER_START_RECOMMENDATIONS_REQUEST_FAILURE
 } from 'state/action-types';
-import { receiveSites } from 'state/reader/sites/actions';
+import { updateSites } from 'state/reader/sites/actions';
 import { receivePosts } from 'state/reader/posts/actions';
 
 /**
@@ -43,24 +42,17 @@ export function requestRecommendations() {
 			type: READER_START_RECOMMENDATIONS_REQUEST,
 		} );
 
-		return new Promise( ( resolve, reject ) => {
-			wpcom.undocumented().readRecommendationsStart( ( error, data ) => {
-				error ? reject( error ) : resolve( data );
-			} );
-		} )
-		.then(
-			( data ) => {
+		return wpcom.undocumented().readRecommendationsStart( { meta: 'site,post' } )
+			.then( ( data ) => {
 				// Collect sites and posts from meta, and receive them separately
 				const sites = map( data.recommendations, property( 'meta.data.site' ) );
 				const posts = map( data.recommendations, property( 'meta.data.post' ) );
-				dispatch( receiveSites( sites ) );
+				dispatch( updateSites( sites ) );
 				dispatch( receivePosts( posts ) );
 
 				// Trim meta off before receiving recommendations
 				const recommendations = map( data.recommendations, ( recommendation ) => {
-					const clonedRec = clone( recommendation );
-					unset( clonedRec, 'meta' );
-					return clonedRec;
+					return omit( recommendation, 'meta' );
 				} );
 
 				dispatch( receiveRecommendations( recommendations ) );

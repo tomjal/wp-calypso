@@ -56,7 +56,7 @@ module.exports = {
 		allowExistingUsers: true,
 	},
 	domainSuggestionVendor: {
-		datestamp: '20160408',
+		datestamp: '20160517',
 		variations: {
 			namegen: 75,
 			domainsbot: 25,

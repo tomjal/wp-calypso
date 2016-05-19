@@ -50,5 +50,31 @@ describe( 'selectors', () => {
 
 			expect( recs ).to.eql( {} );
 		} );
+
+		it( 'should return a map of blog id / post id pairs', () => {
+			expect( getRecommendations( {
+				reader: {
+					start: {
+						items: {
+							1: {
+								site_ID: 1,
+								post_ID: 1
+							},
+							2: {
+								site_ID: 2
+							}
+						}
+					}
+				}
+			} ) ).to.deep.equal( {
+				1: {
+					site_ID: 1,
+					post_ID: 1
+				},
+				2: {
+					site_ID: 2
+				}
+			} );
+		} );
 	} );
 } );

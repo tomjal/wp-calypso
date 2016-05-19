@@ -10,6 +10,7 @@ import debugFactory from 'debug';
 /**
  * Internal dependencies
  */
+import config from 'config';
 import WebPreview from 'components/web-preview';
 import * as PreviewActions from 'state/preview/actions';
 import accept from 'lib/accept';
@@ -55,13 +56,17 @@ const DesignPreview = React.createClass( {
 	},
 
 	componentDidMount() {
-		if ( this.props.selectedSite && this.props.selectedSite.jetpack ) {
+		if ( this.props.selectedSite ) {
 			return;
 		}
 		this.loadPreview();
 	},
 
 	componentDidUpdate( prevProps ) {
+		if ( ! config.isEnabled( 'preview-endpoint' ) ) {
+			return;
+		}
+
 		// If there is no markup or the site has changed, fetch it
 		if ( ! this.props.previewMarkup || this.props.selectedSiteId !== prevProps.selectedSiteId ) {
 			this.loadPreview();
@@ -97,6 +102,9 @@ const DesignPreview = React.createClass( {
 	},
 
 	loadPreview() {
+		if ( ! config.isEnabled( 'preview-endpoint' ) ) {
+			return;
+		}
 		if ( this.props.selectedSite && this.props.selectedSite.jetpack ) {
 			return;
 		}
@@ -146,20 +154,33 @@ const DesignPreview = React.createClass( {
 	},
 
 	render() {
-		return (
-			<WebPreview
-				className={ this.props.className }
-				showExternal={ true }
-				previewUrl={ this.props.selectedSite ? this.props.selectedSite.URL : '' }
-				showClose={ this.props.showClose }
-				showPreview={ this.props.showPreview }
-				defaultViewportDevice={ this.props.defaultViewportDevice }
-				previewMarkup={ this.props.previewMarkup }
-				onClose={ this.onClosePreview }
-				onLoad={ this.onLoad }
-			>
-			{ this.props.children }
-			</WebPreview>
+		return config.isEnabled( 'preview-endpoint' ) ? 
+			(
+				<WebPreview
+					className={ this.props.className }
+					showExternal={ true }
+					previewUrl={ this.props.selectedSite ? this.props.selectedSite.URL : '' }
+					showClose={ this.props.showClose }
+					showPreview={ this.props.showPreview }
+					defaultViewportDevice={ this.props.defaultViewportDevice }
+					previewMarkup={ this.props.previewMarkup }
+					onClose={ this.onClosePreview }
+					onLoad={ this.onLoad }
+				>
+					{ this.props.children }
+				</WebPreview>
+			)
+		: (
+				<WebPreview
+					className={ this.props.className }
+					showExternal={ true }
+					previewUrl={ this.props.selectedSite ? this.props.selectedSite.URL + '?iframe=true&theme_preview=true' : '' }
+					showClose={ this.props.showClose }
+					showPreview={ this.props.showPreview }
+					defaultViewportDevice={ this.props.defaultViewportDevice }
+				>
+					{ this.props.children }
+				</WebPreview>
 		);
 	}
 } );

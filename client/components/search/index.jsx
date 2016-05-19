@@ -173,26 +173,23 @@ const Search = React.createClass( {
 	},
 
 	closeSearch: function( event ) {
-		var input;
-
 		event.preventDefault();
 
 		if ( this.props.disabled ) {
 			return;
 		}
 
-		input = ReactDom.findDOMNode( this.refs.searchInput );
-
-		this.setState( {
-			keyword: '',
-			isOpen: this.props.isOpen || false
-		} );
-
-		input.value = ''; // will not trigger onChange
-		input.blur();
-
 		if ( this.props.pinned ) {
 			ReactDom.findDOMNode( this.refs.openIcon ).focus();
+		} else {
+			var input = ReactDom.findDOMNode( this.refs.searchInput );
+			input.value = ''; // will not trigger onChange
+			input.blur();
+
+			this.setState( {
+				keyword: '',
+				isOpen: this.props.isOpen || false
+			} );
 		}
 
 		this.props.onSearchClose();
@@ -201,13 +198,9 @@ const Search = React.createClass( {
 	},
 
 	keyUp: function( event ) {
-		if ( event.which === 13 && isMobile() ) {
+		if ( event.key === 'Enter' && isMobile() ) {
 			//dismiss soft keyboards
 			this.blur();
-		}
-
-		if ( ! this.props.pinned ) {
-			return;
 		}
 
 		if ( event.key === 'Escape' ) {
